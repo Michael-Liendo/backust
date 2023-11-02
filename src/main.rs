@@ -1,4 +1,19 @@
 use std::fs;
+use std::path::PathBuf;
+use std::time::SystemTime;
+
+fn watch_dir(directory: PathBuf) {
+    let mut current_time = SystemTime::now();
+
+    loop {
+        let metadata = fs::metadata(&directory).unwrap();
+        let last_modified = metadata.modified().unwrap();
+        if current_time < last_modified {
+            println!("The directory has been modified");
+            current_time = SystemTime::now();
+        }
+    }
+}
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -65,5 +80,6 @@ fn main() {
         std::process::exit(1);
     }
 
-    //
+    println!("Checking for changes in {}...", source_dir.display());
+    watch_dir(source_dir)
 }
