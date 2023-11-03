@@ -1,7 +1,11 @@
+mod utils;
+
 use std::collections::HashSet;
 use std::fs;
-use std::path::PathBuf;
 use std::time::SystemTime;
+use utils::copy_file::copy_file;
+use utils::load_files::load_files;
+use utils::remove_file::remove_file;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -110,38 +114,4 @@ fn main() {
             }
         }
     }
-}
-
-fn remove_file(from_path: String, to_directory: PathBuf) {
-    let binding = PathBuf::from(from_path);
-    let file_name = binding.file_name().unwrap().to_str().unwrap();
-    let to_path = to_directory.join(file_name);
-
-    if to_path.exists() {
-        fs::remove_file(to_path).unwrap();
-    }
-}
-
-fn copy_file(from_path: PathBuf, to_directory: PathBuf) {
-    let file_name = from_path.file_name().unwrap().to_str().unwrap();
-    let to_path = to_directory.join(file_name);
-
-    fs::copy(from_path, to_path).unwrap();
-}
-
-fn load_files(directory: PathBuf) -> HashSet<String> {
-    let mut files: HashSet<String> = HashSet::new();
-
-    for entry in fs::read_dir(&directory).unwrap() {
-        let entry = entry.unwrap();
-        let path = entry.path();
-
-        if path.is_dir() {
-            files.extend(load_files(path.clone()));
-        } else {
-            files.insert(path.display().to_string());
-        }
-    }
-
-    files
 }
