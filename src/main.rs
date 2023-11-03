@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::fs;
 use std::path::PathBuf;
 use std::time::SystemTime;
@@ -71,32 +72,60 @@ fn main() {
 
     let mut current_time = SystemTime::now();
 
+    let mut initial_files: HashSet<String> = load_files(source_directory.clone());
+
     loop {
         let metadata = fs::metadata(&source_directory).unwrap();
         let last_modified = metadata.modified().unwrap();
         if current_time < last_modified {
             current_time = SystemTime::now();
 
-            println!(
-                "Copying {} to {}",
-                source_directory.display(),
-                backup_directory.display()
-            );
+            let current_files = load_files(source_directory.clone());
 
-            copy(source_directory.clone(), backup_directory.clone());
+            let current_files_clone = current_files.clone();
+
+            let deleted_files: HashSet<String> = initial_files
+                .difference(&current_files_clone)
+                .cloned()
+                .collect();
+
+            let new_files: HashSet<String> =
+                current_files.difference(&initial_files).cloned().collect();
+
+            initial_files = current_files;
+
+            if new_files.len() > 0 {
+                for file_path in new_files {
+                    copy(
+                        fs::canonicalize(file_path).unwrap(),
+                        backup_directory.clone(),
+                    );
+                }
+            }
         }
     }
 }
 
-fn copy(from_directory: PathBuf, to_directory: PathBuf) {
-    for entry in fs::read_dir(&from_directory).unwrap() {
+fn copy(from_path: PathBuf, to_directory: PathBuf) {
+    let file_name = from_path.file_name().unwrap().to_str().unwrap();
+    let to_path = to_directory.join(file_name);
+
+    fs::copy(from_path, to_path).unwrap();
+}
+
+fn load_files(directory: PathBuf) -> HashSet<String> {
+    let mut files: HashSet<String> = HashSet::new();
+
+    for entry in fs::read_dir(&directory).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
 
         if path.is_dir() {
-            copy(path.clone(), to_directory.join(path.file_name().unwrap()));
+            files.extend(load_files(path.clone()));
         } else {
-            fs::copy(path.clone(), to_directory.join(path.file_name().unwrap())).unwrap();
+            files.insert(path.display().to_string());
         }
     }
+
+    files
 }
