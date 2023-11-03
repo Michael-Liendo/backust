@@ -96,7 +96,7 @@ fn main() {
 
             if new_files.len() > 0 {
                 for file_path in new_files {
-                    copy(
+                    copy_file(
                         fs::canonicalize(file_path).unwrap(),
                         backup_directory.clone(),
                     );
@@ -106,7 +106,7 @@ fn main() {
     }
 }
 
-fn copy(from_path: PathBuf, to_directory: PathBuf) {
+fn copy_file(from_path: PathBuf, to_directory: PathBuf) {
     let file_name = from_path.file_name().unwrap().to_str().unwrap();
     let to_path = to_directory.join(file_name);
 
