@@ -102,7 +102,23 @@ fn main() {
                     );
                 }
             }
+
+            if deleted_files.len() > 0 {
+                for file_path in deleted_files {
+                    remove_file(file_path, backup_directory.clone());
+                }
+            }
         }
+    }
+}
+
+fn remove_file(from_path: String, to_directory: PathBuf) {
+    let binding = PathBuf::from(from_path);
+    let file_name = binding.file_name().unwrap().to_str().unwrap();
+    let to_path = to_directory.join(file_name);
+
+    if to_path.exists() {
+        fs::remove_file(to_path).unwrap();
     }
 }
 
