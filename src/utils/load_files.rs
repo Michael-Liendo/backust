@@ -8,6 +8,7 @@ pub fn load_files(directory: PathBuf) -> HashSet<String> {
         let path = entry.path();
 
         if path.is_dir() {
+            files.insert(path.display().to_string());
             files.extend(load_files(path.clone()));
         } else {
             files.insert(path.display().to_string());

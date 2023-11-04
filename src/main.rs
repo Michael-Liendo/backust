@@ -101,6 +101,7 @@ fn main() {
             if new_files.len() > 0 {
                 for file_path in new_files {
                     copy_file(
+                        source_directory.clone(),
                         fs::canonicalize(file_path).unwrap(),
                         backup_directory.clone(),
                     );
@@ -109,7 +110,11 @@ fn main() {
 
             if deleted_files.len() > 0 {
                 for file_path in deleted_files {
-                    remove_file(file_path, backup_directory.clone());
+                    remove_file(
+                        source_directory.clone(),
+                        file_path,
+                        backup_directory.clone(),
+                    );
                 }
             }
         }
