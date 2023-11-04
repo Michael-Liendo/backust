@@ -1,8 +1,8 @@
 mod utils;
 
 use std::collections::HashSet;
-use std::fs;
 use std::time::SystemTime;
+use std::{fs, path};
 use utils::copy_file::copy_file;
 use utils::load_files::load_files;
 use utils::remove_file::remove_file;
@@ -112,7 +112,7 @@ fn main() {
                 for file_path in deleted_files {
                     remove_file(
                         source_directory.clone(),
-                        file_path,
+                        path::PathBuf::from(file_path),
                         backup_directory.clone(),
                     );
                 }
