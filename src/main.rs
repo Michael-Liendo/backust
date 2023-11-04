@@ -76,6 +76,18 @@ fn main() {
 
     let mut initial_files: HashSet<String> = load_files(source_directory.clone());
 
+    // Copy the initial files
+    for file_path in initial_files.clone() {
+        copy_file(
+            source_directory.clone(),
+            fs::canonicalize(file_path).unwrap(),
+            backup_directory.clone(),
+        );
+    }
+    println!("Initial files copied");
+
+    // Main loop
+
     loop {
         let metadata = fs::metadata(&source_directory).unwrap();
         let last_modified = metadata.modified().unwrap();
