@@ -11,10 +11,9 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     let mut backup_dir_path = String::new();
     let mut source_dir_path = String::new();
-    let mut i = 0;
 
     // Parse the arguments
-    for arg in &args {
+    for (i, arg) in args.iter().enumerate() {
         if arg == "-b" {
             if i + 1 >= args.len() {
                 println!("Error: -b requires a directory to backup");
@@ -33,15 +32,14 @@ fn main() {
             println!("Usage:  -b <backup_dir> -s <source_dir>");
             std::process::exit(0);
         }
-        i += 1;
     }
 
     // Check if the arguments are empty
-    if backup_dir_path == "" {
+    if backup_dir_path.is_empty() {
         println!("Error: -b requires a directory to backup");
         std::process::exit(1);
     }
-    if source_dir_path == "" {
+    if source_dir_path.is_empty() {
         println!("Error: -s requires a directory to source");
         std::process::exit(1);
     }
@@ -98,7 +96,7 @@ fn main() {
 
             initial_files = current_files;
 
-            if new_files.len() > 0 {
+            if !new_files.is_empty() {
                 for file_path in new_files {
                     copy_file(
                         source_directory.clone(),
@@ -108,7 +106,7 @@ fn main() {
                 }
             }
 
-            if deleted_files.len() > 0 {
+            if !deleted_files.is_empty() {
                 for file_path in deleted_files {
                     remove_file(
                         source_directory.clone(),
