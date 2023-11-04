@@ -1,6 +1,4 @@
-# backust
-
-## Description
+# Backust
 
 A simple backup system for copy files and directories to a backup directory.
 
