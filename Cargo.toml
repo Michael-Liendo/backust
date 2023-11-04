@@ -1,5 +1,5 @@
 [package]
-name = "back-rust"
+name = "backust"
 version = "0.1.0"
 edition = "2021"
 
