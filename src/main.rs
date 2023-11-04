@@ -70,8 +70,6 @@ fn main() {
         std::process::exit(1);
     }
 
-    println!("Watching {} for changes", source_directory.display());
-
     let mut current_time = SystemTime::now();
 
     let mut initial_files: HashSet<String> = load_files(source_directory.clone());
@@ -86,8 +84,9 @@ fn main() {
     }
     println!("Initial files copied");
 
-    // Main loop
+    println!("Watching {} for changes", source_directory.display());
 
+    // Main loop
     loop {
         let metadata = fs::metadata(&source_directory).unwrap();
         let last_modified = metadata.modified().unwrap();
