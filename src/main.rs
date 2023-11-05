@@ -74,15 +74,12 @@ fn main() {
 
     let mut last_modification = get_last_modification(source_directory.clone());
 
-    let mut initial_files: HashSet<String> = load_files(source_directory.clone());
+    let mut initial_files: HashSet<String> = load_files(&source_directory);
 
     // Copy the initial files
     for file_path in initial_files.clone() {
-        copy_file(
-            source_directory.clone(),
-            fs::canonicalize(file_path).unwrap(),
-            backup_directory.clone(),
-        );
+        let file_path = fs::canonicalize(file_path).unwrap();
+        copy_file(&source_directory, &file_path, &backup_directory);
     }
     println!("Initial files copied");
 
@@ -95,7 +92,7 @@ fn main() {
         if last_modification < last_modified {
             last_modification = get_last_modification(source_directory.clone());
 
-            let current_files = load_files(source_directory.clone());
+            let current_files = load_files(&source_directory);
 
             let current_files_clone = current_files.clone();
 
@@ -111,21 +108,15 @@ fn main() {
 
             if !new_files.is_empty() {
                 for file_path in new_files {
-                    copy_file(
-                        source_directory.clone(),
-                        fs::canonicalize(file_path).unwrap(),
-                        backup_directory.clone(),
-                    );
+                    let file_path = fs::canonicalize(file_path).unwrap();
+                    copy_file(&source_directory, &file_path, &backup_directory);
                 }
             }
 
             if !deleted_files.is_empty() {
                 for file_path in deleted_files {
-                    remove_file(
-                        source_directory.clone(),
-                        path::PathBuf::from(file_path),
-                        backup_directory.clone(),
-                    );
+                    let file_path = path::PathBuf::from(file_path);
+                    remove_file(&source_directory, &file_path, &backup_directory);
                 }
             }
 

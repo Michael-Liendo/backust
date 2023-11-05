@@ -1,10 +1,10 @@
 use std::fs;
 use std::path::PathBuf;
 
-pub fn copy_file(source_base_path: PathBuf, from: PathBuf, to: PathBuf) {
+pub fn copy_file(source_base_path: &PathBuf, from: &PathBuf, to: &PathBuf) {
     if from.is_file() {
         let source_path = from.clone();
-        let source_path = source_path.strip_prefix(&source_base_path).unwrap();
+        let source_path = source_path.strip_prefix(source_base_path).unwrap();
         let source_path = source_path.to_str().unwrap();
         let destination_path = to.join(source_path);
 
@@ -18,7 +18,7 @@ pub fn copy_file(source_base_path: PathBuf, from: PathBuf, to: PathBuf) {
             let entry = entry.unwrap();
             let path = entry.path();
 
-            copy_file(source_base_path.clone(), path.clone(), to.clone());
+            copy_file(source_base_path, &path, to);
         }
     }
 }
