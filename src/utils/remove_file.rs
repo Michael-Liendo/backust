@@ -1,8 +1,8 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::Path;
 
-pub fn remove_file(source_base_path: PathBuf, from_path: PathBuf, to_directory: PathBuf) {
-    let relative_path = from_path.strip_prefix(&source_base_path).unwrap();
+pub fn remove_file(source_base_path: &Path, from_path: &Path, to_directory: &Path) {
+    let relative_path = from_path.strip_prefix(source_base_path).unwrap();
     let destination_path = to_directory.join(relative_path);
 
     if destination_path.is_file() {
