@@ -1,7 +1,7 @@
 mod utils;
 
 use std::collections::HashSet;
-use std::{fs, path};
+use std::{fs, path, thread, time};
 
 use utils::copy_file::copy_file;
 use utils::get_last_modification::get_last_modification;
@@ -12,6 +12,7 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     let mut backup_dir_path = String::new();
     let mut source_dir_path = String::new();
+    let sleep_duration = time::Duration::from_millis(1000);
 
     // Parse the arguments
     for (i, arg) in args.iter().enumerate() {
@@ -127,6 +128,8 @@ fn main() {
                     );
                 }
             }
+
+            thread::sleep(sleep_duration);
         }
     }
 }
