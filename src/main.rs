@@ -1,9 +1,10 @@
 mod utils;
 
 use std::collections::HashSet;
-use std::time::SystemTime;
 use std::{fs, path};
+
 use utils::copy_file::copy_file;
+use utils::get_last_modification::get_last_modification;
 use utils::load_files::load_files;
 use utils::remove_file::remove_file;
 
@@ -70,7 +71,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    let mut last_modification = SystemTime::now();
+    let mut last_modification = get_last_modification(source_directory.clone());
 
     let mut initial_files: HashSet<String> = load_files(source_directory.clone());
 
@@ -91,7 +92,7 @@ fn main() {
         let metadata = fs::metadata(&source_directory).unwrap();
         let last_modified = metadata.modified().unwrap();
         if last_modification < last_modified {
-            last_modification = SystemTime::now();
+            last_modification = get_last_modification(source_directory.clone());
 
             let current_files = load_files(source_directory.clone());
 
