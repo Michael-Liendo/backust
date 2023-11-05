@@ -70,7 +70,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    let mut current_time = SystemTime::now();
+    let mut last_modification = SystemTime::now();
 
     let mut initial_files: HashSet<String> = load_files(source_directory.clone());
 
@@ -90,8 +90,8 @@ fn main() {
     loop {
         let metadata = fs::metadata(&source_directory).unwrap();
         let last_modified = metadata.modified().unwrap();
-        if current_time < last_modified {
-            current_time = SystemTime::now();
+        if last_modification < last_modified {
+            last_modification = SystemTime::now();
 
             let current_files = load_files(source_directory.clone());
 
